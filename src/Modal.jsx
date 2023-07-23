@@ -32,9 +32,9 @@ const Modal = ({visible, image, onClose}) => {
         <p className='mx-12 my-2'>Image ID: {image.id}</p>
         <button onClick={onClose} className="text-xl p-1">&times;</button>
         </div>
-        <div className='flex my-5 mx-4 items-center align-middle'>
-          <img src={image.src.original} alt={image.alt} className="w-[33rem] h-[18rem] rounded-lg object-cover ml-12 mr-4" />
-          <div className='space-y-2'>
+        <div className='flex flex-col lg:flex-row my-5 mx-4 items-center align-middle'>
+          <img src={image.src.original} alt={image.alt} className="w-[12rem] h-[8rem] lg:w-[33rem] mx-auto lg:h-[18rem] rounded-lg object-cover lg:ml-12 lg:mr-4" />
+          <div className='space-y-2 text-sm lg:text-base'>
             <span className='cursor-pointer' onClick={star}><AiOutlineStar/></span>
             <p>Title: <span className='font-medium'>{image.alt}</span></p>
             <p>Photographer: <span className='font-medium'>{image.photographer}</span> </p>
@@ -42,14 +42,14 @@ const Modal = ({visible, image, onClose}) => {
             <p>Width: <span className='font-medium'>{image.width}</span></p>
             <div className='flex align-middle items-center'>
             
-            <button className='border px-4 py-2 rounded-lg bg-green-500 text-white flex items-center align-middle' onClick={downloadImg}><FaDownload/>&nbsp;Download</button>
+            <button className='border px-2 py-2 lg:px-4 lg:py-2 rounded-lg bg-green-500 text-white flex items-center align-middle' onClick={downloadImg}><FaDownload/>&nbsp;Download</button>
 
-            <a href={shareWhatsapp}><button className='border px-4 py-2 rounded-lg bg-blue-500 text-white mx-4  flex items-center align-middle'><FaWhatsapp size="24px"/></button></a>
+            <a href={shareWhatsapp}><button className='border px-2 py-2 lg:px-4 lg:py-2 rounded-lg bg-blue-500 text-white mx-4  flex items-center align-middle'><FaWhatsapp size="20px"/></button></a>
 
             <CopyToClipboard text={image.src.original} onCopy={() => setCopied(true)}>
-            <button className='border px-4 py-2 mr-2 h-10 rounded-lg bg-red-500 text-white flex items-center align-middle'><AiOutlineCopy size="24px"/></button>
+            <button className='border px-2 py-1 lg:px-4 lg:py-2 mr-2 h-10 rounded-lg bg-red-500 text-white flex items-center align-middle'><AiOutlineCopy size="18px"/></button>
             </CopyToClipboard>
-            {copied ? <AiOutlineCheckCircle size="24px" color='green'/> : null}
+            {copied ? <AiOutlineCheckCircle size="20px" color='green'/> : null}
           </div>
         </div>
       </div>
