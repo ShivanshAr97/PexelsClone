@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai';
 import { createClient } from 'pexels';
-import Tags from './Tags';
 import Load from './Load';
+import Modal from './Modal';
 
 const client = createClient('3G6reoNwve6VtjSUA1SB3HbdGmNI4qBwm01uaZ3YybKImG0f8j3sV4fA');
 
@@ -12,18 +12,20 @@ const Homepage = () => {
     const [finalval, setFinalVal] = useState('')
     const [photos, setPhoto] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [selectedImage, setSelectedImage] = useState(null);
 
-    const tags=['Digital','Computer', 'Codierung', 'Tech', 'Netz','Code','Finanzieren', 'Marketing' ]
+    const tags=['Digital','Computer', 'Television', 'Tech', 'Music','Code','Shopping', 'Marketing' ]
+    const trending=['flowers','river', 'forest']
 
     const onEvent=(e)=>{
         setVal(e.target.value)
     }
 
     const getValue=(e)=>{
-        // e.preventDefault()
+        e.preventDefault()
         setFinalVal(val)
-        // console.log(val);
         setIsLoading(true)
         client.photos
         .search({ query: finalval,page: 10 })
@@ -38,6 +40,11 @@ const Homepage = () => {
         });
     }
 
+    const handleImageClick = (image) => {
+        setIsVisible(true)
+        setSelectedImage(image);
+      };
+    
     useEffect(() => {
         if(finalval !== ''){
         client.photos.search({ query: finalval, page: 10 }).then((data) => {
@@ -45,7 +52,6 @@ const Homepage = () => {
         });
     }
     else {
-        // If finalval is empty, reset the photos state to an empty array
         setPhoto([]);
       }
         
@@ -63,9 +69,9 @@ const Homepage = () => {
         </div>
         <div className='flex align-middle items-center py-1 w-[20%] text-sm text-white my-8 mx-auto px-3 border rounded-lg backdrop-blur-md justify-between'>
             <span className='font-bold text-base'>Trending: </span>
-            <button>flowers</button>
-            <button>forest</button>
-            <button>river</button>
+            {trending.map((trend)=>(
+                <button key={trend} onClick={()=>setFinalVal(trend)}>{trend}</button>
+            ))}
         </div>
         {finalval===''? (
             <p className='text-white text-2xl capitalize my-6 mx-auto font-bold flex justify-center tracking-wide'>Type and click 'Go'</p>
@@ -74,7 +80,7 @@ const Homepage = () => {
                     <p className='text-white text-2xl capitalize my-6 mx-auto font-bold flex justify-center tracking-wide'>Results: {finalval}</p>
                     <div className='grid grid-cols-8 bg-slate-100 py-4 px-4 text-center'>
                     {tags.map(tag=>(
-                        <button onClick={()=>setFinalVal(tag)} className='border-2 p-2 text-sm cursor-pointer font-medium m-1'>{tag}</button>
+                        <button key={tag} onClick={()=>setFinalVal(tag)} className='border-2 p-2 text-sm cursor-pointer font-medium m-1'>{tag}</button>
                     ))}
                     </div>
                 </>
@@ -84,12 +90,19 @@ const Homepage = () => {
         <div className='grid grid-cols-3 gap-4 mx-8 my-6'>
         {photos.length > 0 && (
             photos.map(photo=>(
-                <div className='flex flex-col'>
-                <img className='w-[30rem] h-[12rem] cursor-pointer rounded-lg bg-cover' src={photo.src.original} alt={photo.alt}/>
+                <>
+                <div key={photo.id} className='flex flex-col'>
+                <img onClick={()=>handleImageClick(photo)}  className='w-[30rem] h-[12rem] cursor-pointer rounded-lg object-cover' src={photo.src.original} alt={photo.alt}/>
                 <p className='border w-fit bg-slate-200 text-xs my-2 rounded-md px-2'>{photo.photographer}</p>
                 </div>
+                
+                </>
             ))
-      )}
+        )}
+        {errorMessage}
+        {isVisible && selectedImage && (
+        <Modal visible={isVisible} image={selectedImage} onClose={()=>setIsVisible(false)}/>
+        )}
       </div>
       }
         
